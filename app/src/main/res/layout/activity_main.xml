@@ -17,7 +17,6 @@
             android:gravity="center"
             android:text="Khatam!" />
 
-
         <com.wenchao.cardstack.CardStack
             android:id="@+id/container"
             android:layout_width="match_parent"
