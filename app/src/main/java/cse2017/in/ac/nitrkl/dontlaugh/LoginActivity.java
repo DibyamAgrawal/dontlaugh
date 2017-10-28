@@ -45,6 +45,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cse2017.in.ac.nitrkl.dontlaugh.SQLite.DontLaughDBHelper;
+
 /**
  * Created by LENOVO on 26-10-2017.
  */
@@ -83,6 +85,11 @@ public class LoginActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         int status = sharedPreferences.getInt("status", DEFAULT);
+
+        //Database Creation
+        DontLaughDBHelper dbHelper = new DontLaughDBHelper(this);
+        dbHelper.getWritableDatabase();
+
 
         if (status==1) {
             Toast.makeText(getApplicationContext(),"Status",Toast.LENGTH_LONG).show();

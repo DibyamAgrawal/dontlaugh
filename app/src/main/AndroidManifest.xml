@@ -21,6 +21,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".SQLite.DontLaughProvider"
+            android:authorities="android.support.compat"
+            android:enabled="true"
+            android:exported="false" />
+
     </application>
 
 </manifest>
