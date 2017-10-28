@@ -24,7 +24,8 @@
             android:clipChildren="false"
             android:clipToPadding="false"
             android:gravity="center"
-            android:padding="10dp" />
+            android:padding="10dp"
+            android:layout_marginTop="10dp"/>
 
     </RelativeLayout>
 
