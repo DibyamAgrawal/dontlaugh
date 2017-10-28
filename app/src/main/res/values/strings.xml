@@ -2,4 +2,6 @@
     <string name="app_name">dontlaugh</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="server_client_id">835319138151-1r5cd7g94ossot47ochst2ntoevg8jo4.apps.googleusercontent.com</string>
+    <string name="server_client_secret">k7blZdu2KzqmYA75DkVLwML3</string>
 </resources>

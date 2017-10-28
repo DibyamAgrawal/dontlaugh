@@ -1,6 +1,10 @@
 package cse2017.in.ac.nitrkl.dontlaugh;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -22,10 +26,24 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeTokenRequest;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.people.v1.People;
+import com.google.api.services.people.v1.model.Gender;
+import com.google.api.services.people.v1.model.Person;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.UserInfo;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by LENOVO on 26-10-2017.
@@ -49,6 +67,9 @@ public class LoginActivity extends AppCompatActivity {
 
     // Google Sign In button .
     com.google.android.gms.common.SignInButton signInButton;
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor editor;
+    public static final int DEFAULT = 0;
 
     // TextView to Show Login User Email and Name.
     TextView LoginUserName, LoginUserEmail;
@@ -59,7 +80,16 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
 
+        sharedPreferences = getSharedPreferences("MyData", Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        int status = sharedPreferences.getInt("status", DEFAULT);
 
+        if (status==1) {
+            Toast.makeText(getApplicationContext(),"Status",Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
 
         SignOutButton= (Button) findViewById(R.id.sign_out);
@@ -141,6 +171,7 @@ public class LoginActivity extends AppCompatActivity {
             if (googleSignInResult.isSuccess()){
                 Log.i("reqSucess","reqSuccess");
                 GoogleSignInAccount googleSignInAccount = googleSignInResult.getSignInAccount();
+               // new GetGendersTask().execute(googleSignInAccount);
 
                 FirebaseUserAuth(googleSignInAccount);
             }
@@ -185,6 +216,9 @@ public class LoginActivity extends AppCompatActivity {
 
                             // Setting up Email into TextView.
                             LoginUserEmail.setText("Email =  "+ firebaseUser.getEmail().toString());
+                            editor.putInt("status",1);
+                            editor.commit();
+
 
                         }else {
                             Toast.makeText(LoginActivity.this,"Something Went Wrong",Toast.LENGTH_LONG).show();
@@ -222,4 +256,64 @@ public class LoginActivity extends AppCompatActivity {
         Intent intent = new Intent(LoginActivity.this,MainActivity.class);
         startActivity(intent);
     }
+
+    /*class GetGendersTask extends AsyncTask<GoogleSignInAccount, Void, List<Gender>> {
+        @Override
+        protected List<Gender> doInBackground(GoogleSignInAccount... googleSignInAccounts) {
+            List<Gender> genderList = new ArrayList<>();
+            try {
+                HttpTransport httpTransport = new NetHttpTransport();
+                JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+
+                //Redirect URL for web based applications.
+                // Can be empty too.
+                String redirectUrl = "urn:ietf:wg:oauth:2.0:oob";
+
+                // Exchange auth code for access token
+                GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(
+                        httpTransport,
+                        jsonFactory,
+                        getApplicationContext().getString(R.string.server_client_id),
+                        getApplicationContext().getString(R.string.server_client_secret),
+                        googleSignInAccounts[0].getServerAuthCode(),
+                        redirectUrl
+                ).execute();
+
+                GoogleCredential credential = new GoogleCredential.Builder()
+                        .setClientSecrets(
+                                getApplicationContext().getString(R.string.server_client_id),
+                                getApplicationContext().getString(R.string.server_client_secret)
+                        )
+                        .setTransport(httpTransport)
+                        .setJsonFactory(jsonFactory)
+                        .build();
+
+                credential.setFromTokenResponse(tokenResponse);
+
+                People peopleService = new People.Builder(httpTransport, jsonFactory, credential)
+                        .setApplicationName("My Application Name")
+                        .build();
+
+                // Get the user's profile
+                Person profile = peopleService.people().get("people/me").execute();
+                genderList.addAll(profile.getGenders());
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            return genderList;
+        }
+
+        @Override
+        protected void onPostExecute(List<Gender> genders) {
+            super.onPostExecute(genders);
+            // iterate through the list of Genders to
+            // get the gender value (male, female, other)
+            for (Gender gender : genders) {
+                String genderValue = gender.getValue();
+                Log.i("grnder Value",genderValue);
+            }
+
+        }
+    }*/
 }
