@@ -20,7 +20,7 @@ public class DontLaughProvider extends ContentProvider {
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = DontLaughContract.CONTENT_AUTHORITY;
-        matcher.addURI(authority, DontLaughContract.MessagesEntry.TABLE_NAME, MESSAGES);
+        matcher.addURI(authority, DontLaughContract.PostsEntry.TABLE_NAME, MESSAGES);
         return matcher;
     }
 
@@ -41,7 +41,7 @@ public class DontLaughProvider extends ContentProvider {
         Cursor retCursor = null;
         switch (sUriMatcher.match(uri)) {
             case MESSAGES: {
-                retCursor = defaultQuery(DontLaughContract.MessagesEntry.TABLE_NAME, projection, selection, selectionArgs, sortOrder);
+                retCursor = defaultQuery(DontLaughContract.PostsEntry.TABLE_NAME, projection, selection, selectionArgs, sortOrder);
                 break;
             }
         }
@@ -56,7 +56,7 @@ public class DontLaughProvider extends ContentProvider {
 
         switch (match) {
             case MESSAGES:
-                return DontLaughContract.MessagesEntry.CONTENT_TYPE;
+                return DontLaughContract.PostsEntry.CONTENT_TYPE;
 
         }
         return "";
@@ -72,7 +72,7 @@ public class DontLaughProvider extends ContentProvider {
         switch (match) {
             case MESSAGES: {
                 long _id = db.insertWithOnConflict(
-                        DontLaughContract.MessagesEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                        DontLaughContract.PostsEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 break;
             }
 
@@ -89,7 +89,7 @@ public class DontLaughProvider extends ContentProvider {
         switch (match) {
             case MESSAGES:
                 rowsDeleted = db.delete(
-                        DontLaughContract.MessagesEntry.TABLE_NAME, selection, selectionArgs);
+                        DontLaughContract.PostsEntry.TABLE_NAME, selection, selectionArgs);
                 break;
 
 
@@ -106,7 +106,7 @@ public class DontLaughProvider extends ContentProvider {
 
         switch (match) {
             case MESSAGES:
-                rowsUpdated = db.update(DontLaughContract.MessagesEntry.TABLE_NAME, values, selection,
+                rowsUpdated = db.update(DontLaughContract.PostsEntry.TABLE_NAME, values, selection,
                         selectionArgs);
         }
         return rowsUpdated;

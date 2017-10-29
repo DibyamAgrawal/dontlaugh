@@ -80,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.login);
+
 
         sharedPreferences = getSharedPreferences("MyData", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
@@ -97,6 +97,7 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+        setContentView(R.layout.login);
         signInButton = (SignInButton) findViewById(R.id.sign_in_button);
 
         SignOutButton= (Button) findViewById(R.id.sign_out);
@@ -156,6 +157,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
     // Sign In function Starts From Here.
     public void UserSignInMethod(){
 
@@ -178,8 +185,6 @@ public class LoginActivity extends AppCompatActivity {
             if (googleSignInResult.isSuccess()){
                 Log.i("reqSucess","reqSuccess");
                 GoogleSignInAccount googleSignInAccount = googleSignInResult.getSignInAccount();
-               // new GetGendersTask().execute(googleSignInAccount);
-
                 FirebaseUserAuth(googleSignInAccount);
             }
             else
@@ -262,65 +267,8 @@ public class LoginActivity extends AppCompatActivity {
     public void mainAct(){
         Intent intent = new Intent(LoginActivity.this,MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
-    /*class GetGendersTask extends AsyncTask<GoogleSignInAccount, Void, List<Gender>> {
-        @Override
-        protected List<Gender> doInBackground(GoogleSignInAccount... googleSignInAccounts) {
-            List<Gender> genderList = new ArrayList<>();
-            try {
-                HttpTransport httpTransport = new NetHttpTransport();
-                JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
 
-                //Redirect URL for web based applications.
-                // Can be empty too.
-                String redirectUrl = "urn:ietf:wg:oauth:2.0:oob";
-
-                // Exchange auth code for access token
-                GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(
-                        httpTransport,
-                        jsonFactory,
-                        getApplicationContext().getString(R.string.server_client_id),
-                        getApplicationContext().getString(R.string.server_client_secret),
-                        googleSignInAccounts[0].getServerAuthCode(),
-                        redirectUrl
-                ).execute();
-
-                GoogleCredential credential = new GoogleCredential.Builder()
-                        .setClientSecrets(
-                                getApplicationContext().getString(R.string.server_client_id),
-                                getApplicationContext().getString(R.string.server_client_secret)
-                        )
-                        .setTransport(httpTransport)
-                        .setJsonFactory(jsonFactory)
-                        .build();
-
-                credential.setFromTokenResponse(tokenResponse);
-
-                People peopleService = new People.Builder(httpTransport, jsonFactory, credential)
-                        .setApplicationName("My Application Name")
-                        .build();
-
-                // Get the user's profile
-                Person profile = peopleService.people().get("people/me").execute();
-                genderList.addAll(profile.getGenders());
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-            return genderList;
-        }
-
-        @Override
-        protected void onPostExecute(List<Gender> genders) {
-            super.onPostExecute(genders);
-            // iterate through the list of Genders to
-            // get the gender value (male, female, other)
-            for (Gender gender : genders) {
-                String genderValue = gender.getValue();
-                Log.i("grnder Value",genderValue);
-            }
-
-        }
-    }*/
 }
