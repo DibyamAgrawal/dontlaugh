@@ -15,16 +15,22 @@ import android.support.annotation.Nullable;
 
 public class DontLaughProvider extends ContentProvider {
 
+
+    private static final int POSTS = 100;
+    private static final int CATEGORY = 150;
+
+
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = DontLaughContract.CONTENT_AUTHORITY;
-        matcher.addURI(authority, DontLaughContract.MessagesEntry.TABLE_NAME, MESSAGES);
+        matcher.addURI(authority, DontLaughContract.PostsEntry.TABLE_NAME, POSTS);
+        matcher.addURI(authority, DontLaughContract.CategoriesEntry.TABLE_NAME, CATEGORY);
+
         return matcher;
     }
 
-    private static final int MESSAGES = 100;
     public DontLaughProvider() {
     }
     private DontLaughDBHelper mOpenHelper;
@@ -40,10 +46,16 @@ public class DontLaughProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         Cursor retCursor = null;
         switch (sUriMatcher.match(uri)) {
-            case MESSAGES: {
-                retCursor = defaultQuery(DontLaughContract.MessagesEntry.TABLE_NAME, projection, selection, selectionArgs, sortOrder);
+            case POSTS: {
+                retCursor = defaultQuery(DontLaughContract.PostsEntry.TABLE_NAME, projection, selection, selectionArgs, sortOrder);
                 break;
             }
+            case CATEGORY: {
+                retCursor = defaultQuery(DontLaughContract.CategoriesEntry.TABLE_NAME, projection, selection, selectionArgs, sortOrder);
+                break;
+            }
+
+
         }
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return retCursor;
@@ -55,10 +67,13 @@ public class DontLaughProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
 
         switch (match) {
-            case MESSAGES:
-                return DontLaughContract.MessagesEntry.CONTENT_TYPE;
+            case POSTS:
+                return DontLaughContract.PostsEntry.CONTENT_TYPE;
+            case CATEGORY:
+                return DontLaughContract.CategoriesEntry.CONTENT_TYPE;
 
         }
+
         return "";
     }
 
@@ -70,9 +85,14 @@ public class DontLaughProvider extends ContentProvider {
         Uri returnUri = null;
 
         switch (match) {
-            case MESSAGES: {
+            case POSTS: {
                 long _id = db.insertWithOnConflict(
-                        DontLaughContract.MessagesEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                        DontLaughContract.PostsEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                break;
+            }
+            case CATEGORY: {
+                long _id = db.insertWithOnConflict(
+                        DontLaughContract.CategoriesEntry.TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
                 break;
             }
 
@@ -87,10 +107,16 @@ public class DontLaughProvider extends ContentProvider {
 
         int rowsDeleted = 0;
         switch (match) {
-            case MESSAGES:
+            case POSTS:
                 rowsDeleted = db.delete(
-                        DontLaughContract.MessagesEntry.TABLE_NAME, selection, selectionArgs);
+                        DontLaughContract.PostsEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+
+            case CATEGORY:
+                rowsDeleted = db.delete(
+                        DontLaughContract.CategoriesEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+
 
 
         }
@@ -105,9 +131,16 @@ public class DontLaughProvider extends ContentProvider {
         int rowsUpdated = 0;
 
         switch (match) {
-            case MESSAGES:
-                rowsUpdated = db.update(DontLaughContract.MessagesEntry.TABLE_NAME, values, selection,
-                        selectionArgs);
+            case POSTS:
+                rowsUpdated = db.update(DontLaughContract.PostsEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+
+            case CATEGORY:
+                rowsUpdated = db.update(DontLaughContract.CategoriesEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+
+
+
         }
         return rowsUpdated;
     }
