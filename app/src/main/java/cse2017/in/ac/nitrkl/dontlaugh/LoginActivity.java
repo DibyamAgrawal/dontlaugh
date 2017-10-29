@@ -23,6 +23,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,6 +34,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.people.v1.People;
+import com.google.api.services.people.v1.model.Date;
 import com.google.api.services.people.v1.model.Gender;
 import com.google.api.services.people.v1.model.Person;
 import com.google.firebase.auth.AuthCredential;
@@ -117,6 +119,24 @@ public class LoginActivity extends AppCompatActivity {
 
         // Creating and Configuring Google Sign In object.
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestIdToken(getString(R.string.server_client_id))
+                .requestServerAuthCode(getString(R.string.server_client_id))
+                .requestScopes(new Scope("profile"))
+                .build();
+
+        // Build a GoogleApiClient with access to GoogleSignIn.API and the options above.
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
+                    @Override
+                    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+                        Log.d(TAG, "onConnectionFailed: ");
+                    }
+                })
+                .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
+                .build();
+
+     /*   GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
@@ -128,9 +148,9 @@ public class LoginActivity extends AppCompatActivity {
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
                     }
-                } /* OnConnectionFailedListener */)
+                } *//* OnConnectionFailedListener *//*)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, googleSignInOptions)
-                .build();
+                .build();*/
 
 
         // Adding Click listener to User Sign in Google button.
@@ -180,11 +200,14 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == RequestSignInCode){
 
             GoogleSignInResult googleSignInResult = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+
             Log.i("req","req");
 
             if (googleSignInResult.isSuccess()){
                 Log.i("reqSucess","reqSuccess");
                 GoogleSignInAccount googleSignInAccount = googleSignInResult.getSignInAccount();
+                googleAdditionalDetailsResult(data);
+
                 FirebaseUserAuth(googleSignInAccount);
             }
             else
@@ -208,6 +231,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task AuthResultTask) {
                         Toast.makeText(LoginActivity.this,""+ AuthResultTask.toString(),Toast.LENGTH_LONG).show();
                         if (AuthResultTask.isSuccessful()){
+                            startGoogleAdditionalRequest();
 
                             // Getting Current Login user details.
                             FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
@@ -230,6 +254,7 @@ public class LoginActivity extends AppCompatActivity {
                             LoginUserEmail.setText("Email =  "+ firebaseUser.getEmail().toString());
                             editor.putInt("status",1);
                             editor.commit();
+                            startGoogleAdditionalRequest();
 
 
                         }else {
@@ -269,6 +294,97 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+    //-------------------------------------------------------------------------------------------
+    private void setupGoogleAdditionalDetailsLogin() {
+        // Configure sign-in to request the user's ID, email address, and basic profile. ID and
+        // basic profile are included in DEFAULT_SIGN_IN.
 
+    }
+
+    public void googleAdditionalDetailsResult(Intent data) {
+        Log.i(TAG, "googleAdditionalDetailsResult: ");
+        GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+        if (result.isSuccess()) {
+            // Signed in successfully
+            GoogleSignInAccount acct = result.getSignInAccount();
+            // execute AsyncTask to get data from Google People API
+            new GoogleAdditionalDetailsTask().execute(acct);
+        } else {
+            Log.i(TAG, "googleAdditionalDetailsResult: fail");
+
+        }
+    }
+
+    private void startGoogleAdditionalRequest() {
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
+        startActivityForResult(signInIntent, RequestSignInCode);
+    }
+
+    public class GoogleAdditionalDetailsTask extends AsyncTask<GoogleSignInAccount, Void, Person> {
+        @Override
+        protected Person doInBackground(GoogleSignInAccount... googleSignInAccounts) {
+            Person profile = null;
+            try {
+                HttpTransport httpTransport = new NetHttpTransport();
+                JacksonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+
+                //Redirect URL for web based applications.
+                // Can be empty too.
+                String redirectUrl = "urn:ietf:wg:oauth:2.0:oob";
+
+                // Exchange auth code for access token
+                GoogleTokenResponse tokenResponse = new GoogleAuthorizationCodeTokenRequest(
+                        httpTransport,
+                        jsonFactory,
+                        getString(R.string.server_client_id),
+                        getString(R.string.server_client_secret),
+                        googleSignInAccounts[0].getServerAuthCode(),
+                        redirectUrl
+                ).execute();
+
+                GoogleCredential credential = new GoogleCredential.Builder()
+                        .setClientSecrets(getString(R.string.server_client_id),getString(R.string.server_client_secret))
+                        .setTransport(httpTransport)
+                        .setJsonFactory(jsonFactory)
+                        .build();
+
+                credential.setFromTokenResponse(tokenResponse);
+
+                People peopleService = new People.Builder(httpTransport, jsonFactory, credential)
+                                                .build();
+
+                // Get the user's profile
+                profile = peopleService.people().get("people/me").setRequestMaskIncludeField("person.names,person.genders").execute();
+            } catch (IOException e) {
+                Log.i(TAG, "doInBackground: " + e.getMessage());
+                e.printStackTrace();
+            }
+            return profile;
+        }
+        String profileGender,profileBirthday,profileAbout,profileCover;
+        @Override
+        protected void onPostExecute(Person person) {
+            if (person != null) {
+                if (person.getGenders() != null && person.getGenders().size() > 0) {
+                    profileGender = person.getGenders().get(0).getValue();
+                }
+                if (person.getBirthdays() != null && person.getBirthdays().get(0).size() > 0) {
+//                    yyyy-MM-dd
+                    Date dobDate = person.getBirthdays().get(0).getDate();
+                    if (dobDate.getYear() != null) {
+                        profileBirthday = dobDate.getYear() + "-" + dobDate.getMonth() + "-" + dobDate.getDay();
+                    }
+                }
+                if (person.getBiographies() != null && person.getBiographies().size() > 0) {
+                    profileAbout = person.getBiographies().get(0).getValue();
+                }
+                if (person.getCoverPhotos() != null && person.getCoverPhotos().size() > 0) {
+                    profileCover = person.getCoverPhotos().get(0).getUrl();
+                }
+                Log.i(TAG, String.format("googleOnComplete: gender: %s, birthday: %s, about: %s, cover: %s", profileGender, profileBirthday, profileAbout, profileCover));
+            }
+
+        }
+    }
 
 }
