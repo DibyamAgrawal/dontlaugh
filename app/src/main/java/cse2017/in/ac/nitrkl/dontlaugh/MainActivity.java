@@ -1,6 +1,13 @@
 package cse2017.in.ac.nitrkl.dontlaugh;
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,12 +15,30 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import com.wenchao.cardstack.CardStack;
 
 public class MainActivity extends AppCompatActivity{
-
+    GridView grid;
+    String[] web = {
+            "My Feed",
+            "Unread",
+            "Trending",
+            "Starred",
+            "Shared",
+            "All"
+    } ;
+    int[] imageId = {
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher,
+            R.drawable.ic_launcher
+    };
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private CardStack mCardStack;
@@ -126,6 +151,19 @@ public class MainActivity extends AppCompatActivity{
         mCardStack.setAdapter(mCardAdapter);
         //toast = Toast.makeText(this,"Start",Toast.LENGTH_SHORT);
         //toast.show();
+
+        CustomGrid adapter = new CustomGrid(MainActivity.this, web, imageId);
+        grid=(GridView)findViewById(R.id.grid);
+        grid.setAdapter(adapter);
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Toast.makeText(MainActivity.this, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     @Override
@@ -136,6 +174,21 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    public void sharePost(View v){
 
+
+
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("image/*");
+        sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        Uri uri = Uri.parse("android.resource://cse2017.in.ac.nitrkl.dontlaugh/drawable/"+R.drawable.asdf);
+        sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
+        sharingIntent.putExtra(Intent.EXTRA_TEXT, "Attached Image");
+
+
+
+        startActivity(Intent.createChooser(sharingIntent, "Share via"));
+        //startActivity(sharingIntent);
+    }
 
 }
