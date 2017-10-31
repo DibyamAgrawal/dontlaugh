@@ -2,6 +2,7 @@ package cse2017.in.ac.nitrkl.dontlaugh;
 
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.BitmapFactory;
@@ -19,7 +20,16 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.wenchao.cardstack.CardStack;
+
+import cse2017.in.ac.nitrkl.dontlaugh.POJO.Post;
+import cse2017.in.ac.nitrkl.dontlaugh.SQLite.DontLaughContract;
+import cse2017.in.ac.nitrkl.dontlaugh.SQLite.DontLaughProvider;
 
 public class MainActivity extends AppCompatActivity{
     GridView grid;
@@ -45,6 +55,12 @@ public class MainActivity extends AppCompatActivity{
     private CardsDataAdapter mCardAdapter;
     Toast toast;
 
+    //firebase
+    FirebaseDatabase database;
+    DatabaseReference myRef ;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +85,25 @@ public class MainActivity extends AppCompatActivity{
         mCardAdapter.add(R.mipmap.ic_launcher);
         mCardAdapter.add(R.mipmap.ic_launcher);
         mCardAdapter.add(R.mipmap.ic_launcher);
+
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference("posts");
+
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Post p=dataSnapshot.getValue(Post.class);
+
+                insertPost(p,dataSnapshot.getKey());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
 
 
 
@@ -165,6 +200,35 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
+
+
+    public void insertPost(Post m, String key) {
+        ContentValues[] contentValues = new ContentValues[1];
+        ContentValues cv = new ContentValues();
+        cv.put(DontLaughContract.PostsEntry.PID,key);
+        cv.put(DontLaughContract.PostsEntry.CID, m.getCid());
+        cv.put(DontLaughContract.PostsEntry.INFO, m.getInfo());
+        cv.put(DontLaughContract.PostsEntry.SEEN, m.getSeen());
+        cv.put(DontLaughContract.PostsEntry.SHARE, m.getShare());
+        cv.put(DontLaughContract.PostsEntry.SHARE_COUNT, m.getShareCount());
+        cv.put(DontLaughContract.PostsEntry.STAR, m.getStar());
+        cv.put(DontLaughContract.PostsEntry.TIME, m.getTime());
+        cv.put(DontLaughContract.PostsEntry.URL, m.getUrl());
+        cv.put(DontLaughContract.PostsEntry.URI, m.getUri());
+
+
+
+        contentValues[0] = cv;
+        ContentResolver contentResolver = getApplicationContext().getContentResolver();
+        contentResolver.bulkInsert(DontLaughContract.PostsEntry.CONTENT_URI, contentValues);
+        contentResolver.notifyChange(DontLaughContract.PostsEntry.CONTENT_URI, null);
+
+        // mRecyclerView.scrollToPosition(0);
+
+        //mChatsAdapter.notifyDataSetChanged();
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
