@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.v4.widget.DrawerLayout android:id="@+id/drawLayout"
+                                        xmlns:android="http://schemas.android.com/apk/res/android"
+                                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent">
 
     <!-- Main Window -->
     <RelativeLayout
@@ -15,25 +15,34 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="Khatam!" />
+            android:text="Khatam!"/>
 
-        <com.wenchao.cardstack.CardStack
-            android:id="@+id/container"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:gravity="center"
-            android:padding="10dp" />
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/sharepost"
-            android:layout_alignParentBottom="true"
-            android:text="Share"
-            android:onClick="sharePost"
-            />
+            android:orientation="vertical"
+            android:weightSum="100">
+
+            <com.wenchao.cardstack.CardStack
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="20dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:gravity="center"
+
+                android:layout_weight="92"/>
+
+            <Button
+                android:id="@+id/sharepost"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="sharePost"
+                android:text="Share"
+                android:layout_weight="8"
+                />
+        </LinearLayout>
     </RelativeLayout>
 
     <!-- Navigation Window -->
@@ -41,16 +50,17 @@
         android:id="@+id/navLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start">
+        android:layout_gravity="start"
+        >
 
         <GridView
-            android:numColumns="auto_fit"
-            android:gravity="center"
-            android:columnWidth="75dp"
-            android:stretchMode="columnWidth"
+            android:id="@+id/grid"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/grid"
+            android:columnWidth="75dp"
+            android:gravity="center"
+            android:numColumns="auto_fit"
+            android:stretchMode="columnWidth"
             />
 
 

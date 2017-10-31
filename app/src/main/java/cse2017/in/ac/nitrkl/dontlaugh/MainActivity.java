@@ -240,14 +240,15 @@ public class MainActivity extends AppCompatActivity{
 
     public void sharePost(View v){
 
-
+        String imagePath = "android.resource://cse2017.in.ac.nitrkl.dontlaugh/drawable/"+R.drawable.ic_launcher;
+        Uri uri = Uri.parse(imagePath);
+        String imageFileExtension = imagePath.substring(imagePath.lastIndexOf("."));
 
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("image/*");
-        sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        Uri uri = Uri.parse("android.resource://cse2017.in.ac.nitrkl.dontlaugh/drawable/"+R.drawable.asdf);
+        sharingIntent.setType("image/" + imageFileExtension);
         sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
         sharingIntent.putExtra(Intent.EXTRA_TEXT, "Attached Image");
+        sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
 
 
