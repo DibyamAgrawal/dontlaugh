@@ -61,13 +61,13 @@ public class DontLaughDBHelper extends SQLiteOpenHelper {
         final String SQL_CREATE_ITEM_FEED_TABLE = "CREATE TABLE IF NOT EXISTS " + DontLaughContract.PostsEntry.TABLE_NAME + " (" +
                 DontLaughContract.PostsEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 DontLaughContract.PostsEntry.PID + " TEXT UNIQUE NOT NULL, " +
-                DontLaughContract.PostsEntry.CID + " TEXT , " +
+                DontLaughContract.PostsEntry.CID + " INTEGER , " +
                 DontLaughContract.PostsEntry.INFO + " TEXT , " +
-                DontLaughContract.PostsEntry.SEEN + " TEXT , " +
-                DontLaughContract.PostsEntry.SHARE + " TEXT , " +
-                DontLaughContract.PostsEntry.SHARE_COUNT + " TEXT , " +
-                DontLaughContract.PostsEntry.STAR + " TEXT , " +
-                DontLaughContract.PostsEntry.TIME + " TEXT , " +
+                DontLaughContract.PostsEntry.SEEN + " INTEGER , " +
+                DontLaughContract.PostsEntry.SHARE + " INTEGER , " +
+                DontLaughContract.PostsEntry.SHARE_COUNT + " INTEGER , " +
+                DontLaughContract.PostsEntry.STAR + " INTEGER , " +
+                DontLaughContract.PostsEntry.TIME + " INTEGER , " +
                 DontLaughContract.PostsEntry.URL + " TEXT , " +
                 DontLaughContract.PostsEntry.URI + " TEXT  " +
                 " );";

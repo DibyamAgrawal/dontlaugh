@@ -25,8 +25,8 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:weightSum="100">
-
-            <com.wenchao.cardstack.CardStack
+<!--
+            <cse2017.in.ac.nitrkl.dontlaugh.CardStack
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -34,7 +34,17 @@
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:gravity="center"
+                android:layout_weight="92"/>-->
 
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="20dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:gravity="center"
                 android:layout_weight="92"/>
 
             <Button

@@ -1,38 +1,35 @@
 package cse2017.in.ac.nitrkl.dontlaugh;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
+import android.database.Cursor;
 import android.net.Uri;
-import android.os.Handler;
-import android.provider.MediaStore;
+import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.kennyc.bottomsheet.BottomSheet;
-import com.wenchao.cardstack.CardStack;
 
 import cse2017.in.ac.nitrkl.dontlaugh.POJO.Post;
 import cse2017.in.ac.nitrkl.dontlaugh.SQLite.DontLaughContract;
-import cse2017.in.ac.nitrkl.dontlaugh.SQLite.DontLaughProvider;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity  implements LoaderManager.LoaderCallbacks<Cursor> {
     GridView grid;
     String[] web = {
             "My Feed",
@@ -52,8 +49,10 @@ public class MainActivity extends AppCompatActivity{
     };
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
-    private CardStack mCardStack;
-    private CardsDataAdapter mCardAdapter;
+    //private CardStack mCardStack;
+    private RecyclerView mCardStack;
+
+    private CardsAdapter mCardAdapter;
     Toast toast;
 
     //firebase
@@ -76,119 +75,27 @@ public class MainActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        mCardStack = (CardStack) findViewById(R.id.container);
+
+
+        /*mCardStack = (CardStack) findViewById(R.id.container);
         mCardStack.setContentResource(R.layout.card_layout);
         mCardStack.setStackMargin(20);
-        int top = mCardStack.getTop();
-        mCardAdapter = new CardsDataAdapter(getApplicationContext(), 0);
-        mCardAdapter.add(R.mipmap.ic_launcher);
-        mCardAdapter.add(R.mipmap.ic_launcher);
-        mCardAdapter.add(R.mipmap.ic_launcher);
-        mCardAdapter.add(R.mipmap.ic_launcher);
-        mCardAdapter.add(R.mipmap.ic_launcher);
+        */
+
+        mCardStack = (RecyclerView) findViewById(R.id.container);
+
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        mCardStack.setLayoutManager(manager);
+        mCardStack.setHasFixedSize(true);
 
 
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("posts");
+        //int top = mCardStack.getTop();
+        getSupportLoaderManager().initLoader(100, new Bundle(), this);
 
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                Post p=dataSnapshot.getValue(Post.class);
-
-                insertPost(p,dataSnapshot.getKey());
-            }
-
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-
-        toast = Toast.makeText(getApplicationContext(),"Start",Toast.LENGTH_SHORT);
-        toast.show();
-
-        mCardStack.setListener(new CardStack.CardEventListener() {
-
-
-            @Override
-            public boolean swipeEnd(int direction, float distance) {
-                //if "return true" the dismiss animation will be triggered
-                //if false, the card will move back to stack
-                //distance is finger swipe distance in dp
-
-                //the direction indicate swipe direction
-                //there are four directions
-                //  0  |  1
-                // ----------
-                //  2  |  3
-                toast.cancel();
-                toast = Toast.makeText(getApplicationContext(),"swipeEnd",Toast.LENGTH_SHORT);
-                toast.show();
-
-                return (distance > 300) ? true : false;
-            }
-
-            @Override
-            public boolean swipeStart(int direction, float distance) {
-                toast.cancel();
-                toast = Toast.makeText(getApplicationContext(),"swipeStart",Toast.LENGTH_SHORT);
-                toast.show();
-                return true;
-            }
-
-            @Override
-            public boolean swipeContinue(int direction, float distanceX, float distanceY) {
-                toast.cancel();
-                toast = Toast.makeText(getApplicationContext(),"swipeCont",Toast.LENGTH_SHORT);
-                toast.show();
-                return true;
-            }
-
-            @Override
-            public void discarded(int id, int direction) {
-                //this callback invoked when dismiss animation is finished.
-                toast.cancel();
-                toast = Toast.makeText(getApplicationContext(),"discarded"+id,Toast.LENGTH_SHORT);
-                toast.show();
-            }
-            final int[] i = {0};
-            @Override
-            public void topCardTapped() {
-                // TODO Auto-generated method stub
-                i[0]++;
-                Handler handler = new Handler();
-                Runnable r = new Runnable() {
-                    @Override
-                    public void run() {
-                        i[0] = 0;
-                    }
-                };
-                if (i[0] == 1) {
-                    //Single click
-                    handler.postDelayed(r, 500);
-                    toast.cancel();
-                    toast = Toast.makeText(getApplicationContext(),"single click",Toast.LENGTH_SHORT);
-                    toast.show();
-                } else if (i[0] == 2) {
-                    //Double click
-                    i[0] = 0;
-                    toast.cancel();
-                    toast = Toast.makeText(getApplicationContext(),"double click",Toast.LENGTH_SHORT);
-                    toast.show();
-                }
-
-            }
-        });
-
+        mCardAdapter = new CardsAdapter(this, null);
         mCardStack.setAdapter(mCardAdapter);
-        //toast = Toast.makeText(this,"Start",Toast.LENGTH_SHORT);
-        //toast.show();
+
+
 
         CustomGrid adapter = new CustomGrid(MainActivity.this, web, imageId);
         grid=(GridView)findViewById(R.id.grid);
@@ -203,7 +110,54 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        database = FirebaseDatabase.getInstance();
+        myRef = database.getReference().child("posts");
 
+        myRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Post p=dataSnapshot.getValue(Post.class);
+
+                insertPost(p,dataSnapshot.getKey());
+                Toast.makeText(MainActivity.this, "Post Added", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Post p=dataSnapshot.getValue(Post.class);
+
+                insertPost(p,dataSnapshot.getKey());
+                Toast.makeText(MainActivity.this, "Post Changed", Toast.LENGTH_SHORT).show();
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                deletePost(dataSnapshot.getKey());
+                Toast.makeText(MainActivity.this, "Post Deleted", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
+
+    private void deletePost(String key) {
+
+        ContentResolver contentResolver = getApplicationContext().getContentResolver();
+        contentResolver.delete(DontLaughContract.PostsEntry.CONTENT_URI, DontLaughContract.PostsEntry.PID+"=?",new String[]{key});
+        contentResolver.notifyChange(DontLaughContract.PostsEntry.CONTENT_URI, null);
     }
 
 
@@ -264,4 +218,27 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Uri uri = DontLaughContract.PostsEntry.CONTENT_URI;
+        CursorLoader cursorLoader = new CursorLoader(this,
+                uri,
+                null,
+                null,
+                null,
+                DontLaughContract.PostsEntry.TIME + " desc"
+        );
+
+        return cursorLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mCardAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mCardAdapter.swapCursor(null);
+    }
 }

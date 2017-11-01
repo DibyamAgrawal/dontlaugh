@@ -1,5 +1,9 @@
 package cse2017.in.ac.nitrkl.dontlaugh.POJO;
 
+import android.database.Cursor;
+
+import cse2017.in.ac.nitrkl.dontlaugh.SQLite.DontLaughContract;
+
 /**
  * Created by LENOVO on 31-10-2017.
  */
@@ -7,17 +11,30 @@ package cse2017.in.ac.nitrkl.dontlaugh.POJO;
 public class Post {
 
      String pid;
-     String cid;
+     int cid;
      String info;
-     String seen;
-     String share;
-     String shareCount;
-     String star;
-     String time;
+     int seen;
+     int share;
+     int shareCount;
+     int star;
+     long time;
      String uri;
      String url;
 
     public Post() {
+    }
+
+    public Post(String pid, int cid, String info, int seen, int share, int shareCount, int star, long time, String uri, String url) {
+        this.pid = pid;
+        this.cid = cid;
+        this.info = info;
+        this.seen = seen;
+        this.share = share;
+        this.shareCount = shareCount;
+        this.star = star;
+        this.time = time;
+        this.uri = uri;
+        this.url = url;
     }
 
     public String getPid() {
@@ -28,11 +45,11 @@ public class Post {
         this.pid = pid;
     }
 
-    public String getCid() {
+    public int getCid() {
         return cid;
     }
 
-    public void setCid(String cid) {
+    public void setCid(int cid) {
         this.cid = cid;
     }
 
@@ -44,43 +61,43 @@ public class Post {
         this.info = info;
     }
 
-    public String getSeen() {
+    public int getSeen() {
         return seen;
     }
 
-    public void setSeen(String seen) {
+    public void setSeen(int seen) {
         this.seen = seen;
     }
 
-    public String getShare() {
+    public int getShare() {
         return share;
     }
 
-    public void setShare(String share) {
+    public void setShare(int share) {
         this.share = share;
     }
 
-    public String getShareCount() {
+    public int getShareCount() {
         return shareCount;
     }
 
-    public void setShareCount(String shareCount) {
+    public void setShareCount(int shareCount) {
         this.shareCount = shareCount;
     }
 
-    public String getStar() {
+    public int getStar() {
         return star;
     }
 
-    public void setStar(String star) {
+    public void setStar(int star) {
         this.star = star;
     }
 
-    public String getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(String time) {
+    public void setTime(long time) {
         this.time = time;
     }
 
@@ -98,5 +115,12 @@ public class Post {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public static Post fromCursor(Cursor cursor) {
+        Post p=new Post();
+        p.setUrl(cursor.getString(cursor.getColumnIndex(DontLaughContract.PostsEntry.URL)));
+
+        return p;
     }
 }
