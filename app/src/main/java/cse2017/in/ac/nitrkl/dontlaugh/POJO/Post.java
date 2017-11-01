@@ -10,18 +10,18 @@ import cse2017.in.ac.nitrkl.dontlaugh.SQLite.DontLaughContract;
 
 public class Post {
 
-     String pid;
-     int cid;
-     String info;
-     int seen;
-     int share;
-     int shareCount;
-     int star;
-     long time;
-     String uri;
-     String url;
+    private String pid;
+    private int cid;
+    private String info;
+    private int seen;
+    private int share;
+    private int shareCount;
+    private int star;
+    private long time;
+    private String uri;
+    private String url;
 
-    public Post() {
+    private Post() {
     }
 
     public Post(String pid, int cid, String info, int seen, int share, int shareCount, int star, long time, String uri, String url) {
@@ -118,7 +118,7 @@ public class Post {
     }
 
     public static Post fromCursor(Cursor cursor) {
-        Post p=new Post();
+        Post p = new Post();
         p.setUrl(cursor.getString(cursor.getColumnIndex(DontLaughContract.PostsEntry.URL)));
 
         return p;

@@ -29,7 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import cse2017.in.ac.nitrkl.dontlaugh.POJO.Post;
 import cse2017.in.ac.nitrkl.dontlaugh.SQLite.DontLaughContract;
 
-public class MainActivity extends AppCompatActivity  implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     GridView grid;
     String[] web = {
             "My Feed",
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
             "Starred",
             "Shared",
             "All"
-    } ;
+    };
     int[] imageId = {
             R.drawable.ic_launcher,
             R.drawable.ic_launcher,
@@ -57,8 +57,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
 
     //firebase
     FirebaseDatabase database;
-    DatabaseReference myRef ;
-
+    DatabaseReference myRef;
 
 
     @Override
@@ -96,16 +95,15 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
         mCardStack.setAdapter(mCardAdapter);
 
 
-
         CustomGrid adapter = new CustomGrid(MainActivity.this, web, imageId);
-        grid=(GridView)findViewById(R.id.grid);
+        grid = (GridView) findViewById(R.id.grid);
         grid.setAdapter(adapter);
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                Toast.makeText(MainActivity.this, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "You Clicked at " + web[+position], Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -116,17 +114,17 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
         myRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Post p=dataSnapshot.getValue(Post.class);
+                Post p = dataSnapshot.getValue(Post.class);
 
-                insertPost(p,dataSnapshot.getKey());
+                insertPost(p, dataSnapshot.getKey());
                 Toast.makeText(MainActivity.this, "Post Added", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Post p=dataSnapshot.getValue(Post.class);
+                Post p = dataSnapshot.getValue(Post.class);
 
-                insertPost(p,dataSnapshot.getKey());
+                insertPost(p, dataSnapshot.getKey());
                 Toast.makeText(MainActivity.this, "Post Changed", Toast.LENGTH_SHORT).show();
 
             }
@@ -150,13 +148,12 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
         });
 
 
-
     }
 
     private void deletePost(String key) {
 
         ContentResolver contentResolver = getApplicationContext().getContentResolver();
-        contentResolver.delete(DontLaughContract.PostsEntry.CONTENT_URI, DontLaughContract.PostsEntry.PID+"=?",new String[]{key});
+        contentResolver.delete(DontLaughContract.PostsEntry.CONTENT_URI, DontLaughContract.PostsEntry.PID + "=?", new String[]{key});
         contentResolver.notifyChange(DontLaughContract.PostsEntry.CONTENT_URI, null);
     }
 
@@ -164,7 +161,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
     public void insertPost(Post m, String key) {
         ContentValues[] contentValues = new ContentValues[1];
         ContentValues cv = new ContentValues();
-        cv.put(DontLaughContract.PostsEntry.PID,key);
+        cv.put(DontLaughContract.PostsEntry.PID, key);
         cv.put(DontLaughContract.PostsEntry.CID, m.getCid());
         cv.put(DontLaughContract.PostsEntry.INFO, m.getInfo());
         cv.put(DontLaughContract.PostsEntry.SEEN, m.getSeen());
@@ -174,7 +171,6 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
         cv.put(DontLaughContract.PostsEntry.TIME, m.getTime());
         cv.put(DontLaughContract.PostsEntry.URL, m.getUrl());
         cv.put(DontLaughContract.PostsEntry.URI, m.getUri());
-
 
 
         contentValues[0] = cv;
@@ -188,7 +184,6 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
     }
 
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mActionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -198,9 +193,9 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
     }
 
     //share content chooser
-    public void sharePost(View v){
+    public void sharePost(View v) {
 
-        String imagePath = "android.resource://cse2017.in.ac.nitrkl.dontlaugh/drawable/"+R.drawable.ic_launcher;
+        String imagePath = "android.resource://cse2017.in.ac.nitrkl.dontlaugh/drawable/" + R.drawable.ic_launcher;
         Uri uri = Uri.parse(imagePath);
         String imageFileExtension = imagePath.substring(imagePath.lastIndexOf("."));
 

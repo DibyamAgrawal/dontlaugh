@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.v4.widget.DrawerLayout
-    android:id="@+id/drawLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <!-- Main Window -->
     <RelativeLayout
@@ -18,43 +16,42 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="Khatam!"/>
+            android:text="Khatam!" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:weightSum="100">
-<!--
-            <cse2017.in.ac.nitrkl.dontlaugh.CardStack
-                android:id="@+id/container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="20dp"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:gravity="center"
-                android:layout_weight="92"/>-->
+            <!--
+                        <cse2017.in.ac.nitrkl.dontlaugh.CardStack
+                            android:id="@+id/container"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingTop="20dp"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            android:gravity="center"
+                            android:layout_weight="92"/>-->
 
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="20dp"
+                android:layout_weight="92"
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 android:gravity="center"
-                android:layout_weight="92"/>
+                android:paddingTop="20dp" />
 
             <Button
                 android:id="@+id/sharepost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="sharePost"
-                android:text="Share"
                 android:layout_weight="8"
-                />
+                android:onClick="sharePost"
+                android:text="Share" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -63,8 +60,7 @@
         android:id="@+id/navLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="start"
-        >
+        android:layout_gravity="start">
 
         <GridView
             android:id="@+id/grid"
@@ -73,8 +69,7 @@
             android:columnWidth="75dp"
             android:gravity="center"
             android:numColumns="auto_fit"
-            android:stretchMode="columnWidth"
-            />
+            android:stretchMode="columnWidth" />
 
 
     </android.support.design.widget.NavigationView>
