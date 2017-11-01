@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "835319138151",
+    "firebase_url": "https://dont-laugh.firebaseio.com",
+    "project_id": "dont-laugh",
+    "storage_bucket": "dont-laugh.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835319138151:android:02c2cc67ce47d265",
+        "android_client_info": {
+          "package_name": "cse2017.in.ac.nitrkl.dontlaugh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835319138151-njckmig8b8enkiih0op8jpmgpokle1h6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cse2017.in.ac.nitrkl.dontlaugh",
+            "certificate_hash": "e74827d2666e184cb0e9723cc96f7e25a13f3ab9"
+          }
+        },
+        {
+          "client_id": "835319138151-q6dok0lgq9peebnqn6nfjc96g5t8htn6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cse2017.in.ac.nitrkl.dontlaugh",
+            "certificate_hash": "62e39b9596ba8fdf4b38ef385b80125e5c33af74"
+          }
+        },
+        {
+          "client_id": "835319138151-d79vbt7f1dgnom2ap42b3j7mf2vafqu2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyARXmsroTlAyqEdBDQzws6jaQlPtgbOJis"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "835319138151-d79vbt7f1dgnom2ap42b3j7mf2vafqu2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
