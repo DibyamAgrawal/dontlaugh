@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.kennyc.bottomsheet.BottomSheet;
 import com.wenchao.cardstack.CardStack;
 
 import cse2017.in.ac.nitrkl.dontlaugh.POJO.Post;
@@ -78,13 +79,14 @@ public class MainActivity extends AppCompatActivity{
         mCardStack = (CardStack) findViewById(R.id.container);
         mCardStack.setContentResource(R.layout.card_layout);
         mCardStack.setStackMargin(20);
-
+        int top = mCardStack.getTop();
         mCardAdapter = new CardsDataAdapter(getApplicationContext(), 0);
         mCardAdapter.add(R.mipmap.ic_launcher);
         mCardAdapter.add(R.mipmap.ic_launcher);
         mCardAdapter.add(R.mipmap.ic_launcher);
         mCardAdapter.add(R.mipmap.ic_launcher);
         mCardAdapter.add(R.mipmap.ic_launcher);
+
 
         database = FirebaseDatabase.getInstance();
         myRef = database.getReference("posts");
@@ -200,6 +202,8 @@ public class MainActivity extends AppCompatActivity{
 
             }
         });
+
+
     }
 
 
@@ -239,6 +243,7 @@ public class MainActivity extends AppCompatActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    //share content chooser
     public void sharePost(View v){
 
         String imagePath = "android.resource://cse2017.in.ac.nitrkl.dontlaugh/drawable/"+R.drawable.ic_launcher;
@@ -250,11 +255,13 @@ public class MainActivity extends AppCompatActivity{
         sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
         sharingIntent.putExtra(Intent.EXTRA_TEXT, "Attached Image");
         sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
+        //BottomSheet share = BottomSheet.createShareBottomSheet(this, sharingIntent, "Share Via");
+// Make sure that it doesn't return null! If the system can not handle the intent, null will be returned.
+        //if (share != null) share.show();
 
 
         startActivity(Intent.createChooser(sharingIntent, "Share via"));
-        //startActivity(sharingIntent);
+
     }
 
 }
