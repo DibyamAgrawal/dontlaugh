@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity{
                 insertPost(p,dataSnapshot.getKey());
             }
 
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
