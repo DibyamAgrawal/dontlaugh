@@ -181,7 +181,7 @@ public class MainActivity extends AppCompatActivity{
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("image/*");
         sharingIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        Uri uri = Uri.parse("android.resource://cse2017.in.ac.nitrkl.dontlaugh/drawable/"+R.drawable.asdf);
+        Uri uri = Uri.parse("android.resource://cse2017.in.ac.nitrkl.dontlaugh/drawable/"+R.drawable.ic_launcher);
         sharingIntent.putExtra(Intent.EXTRA_STREAM, uri);
         sharingIntent.putExtra(Intent.EXTRA_TEXT, "Attached Image");
 
