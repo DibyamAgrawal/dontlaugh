@@ -66,9 +66,8 @@
             android:id="@+id/grid"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:columnWidth="75dp"
             android:gravity="center"
-            android:numColumns="auto_fit"
+            android:numColumns="2"
             android:stretchMode="columnWidth" />
 
 

@@ -1,12 +1,17 @@
 package cse2017.in.ac.nitrkl.dontlaugh;
 
+import android.app.Activity;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import static java.security.AccessController.getContext;
 
 /**
  * Created by LENOVO on 30-10-2017.
@@ -48,9 +53,17 @@ public class CustomGrid extends BaseAdapter{
             grid = new View(mContext);
             grid = inflater.inflate(R.layout.gridsingle, null);
             TextView textView = (TextView) grid.findViewById(R.id.grid_text);
-            ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
+//            ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
+            LinearLayout linearLayout = (LinearLayout)grid.findViewById(R.id.grid_single);
             textView.setText(web[position]);
-            imageView.setImageResource(Imageid[position]);
+            linearLayout.setBackgroundResource(Imageid[position]);
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            int height = displayMetrics.heightPixels;
+            int width = displayMetrics.widthPixels;
+
+            linearLayout.setMinimumHeight((int)(height*.8/3));
         } else {
             grid = (View) convertView;
         }
