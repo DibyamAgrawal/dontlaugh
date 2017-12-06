@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -37,15 +38,31 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             "Trending",
             "Starred",
             "Shared",
-            "All"
+            "Broadcast"
     };
-    int[] imageId = {
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher,
-            R.drawable.ic_launcher
+    int[] gifId = {
+            R.drawable.myfeed,
+            R.drawable.unread,
+            R.drawable.trending,
+            R.drawable.starred,
+            R.drawable.shared1,
+            R.drawable.broadcast1,
+    };
+    int[] backColor = {
+            Color.parseColor("#C2AE7C"),
+            Color.parseColor("#798E85"),
+            Color.parseColor("#61AD54"),
+            Color.parseColor("#EDAB21"),
+            Color.parseColor("#EBDBCB"),
+            Color.parseColor("#8CABA3")
+    };
+    int[] textColor = {
+            Color.parseColor("#B25B42"),
+            Color.parseColor("#C2B775"),
+            Color.parseColor("#886236"),
+            Color.parseColor("#223823"),
+            Color.parseColor("#DB85AA"),
+            Color.parseColor("#6B6E5E")
     };
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -95,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mCardStack.setAdapter(mCardAdapter);
 
 
-        CustomGrid adapter = new CustomGrid(MainActivity.this, web, imageId);
+        CustomGrid adapter = new CustomGrid(MainActivity.this, web, backColor, textColor, gifId);
         grid = (GridView) findViewById(R.id.grid);
         grid.setAdapter(adapter);
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -1,45 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-              <!--xmlns:tools="http://schemas.android.com/tools"-->
-              <!--android:layout_width="wrap_content"-->
-              <!--android:layout_height="wrap_content"-->
-              <!--android:gravity="center"-->
-              <!--android:orientation="vertical"-->
-              <!--android:padding="5dp"-->
-    <!--android:weightSum="100">-->
+<?xml version="1.0" encoding="utf-8"?><!--<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"--><!--xmlns:tools="http://schemas.android.com/tools"--><!--android:layout_width="wrap_content"--><!--android:layout_height="wrap_content"--><!--android:gravity="center"--><!--android:orientation="vertical"--><!--android:padding="5dp"--><!--android:weightSum="100">-->
 
-    <!--<ImageView-->
-        <!--android:id="@+id/grid_image"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_weight="80">-->
-    <!--</ImageView>-->
+<!--<ImageView--><!--android:id="@+id/grid_image"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_weight="80">--><!--</ImageView>-->
 
-    <!--<TextView-->
-        <!--android:id="@+id/grid_text"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:textSize="12sp"-->
-        <!--android:layout_weight="20"-->
-        <!--android:gravity="center">-->
-    <!--</TextView>-->
+<!--<TextView--><!--android:id="@+id/grid_text"--><!--android:layout_width="match_parent"--><!--android:layout_height="wrap_content"--><!--android:layout_marginTop="10dp"--><!--android:textSize="12sp"--><!--android:layout_weight="20"--><!--android:gravity="center">--><!--</TextView>-->
 
 <!--</LinearLayout>-->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:components="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/grid_single"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:layout_height="111dp"
+    android:gravity="center">
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/grid_gif"
+        android:layout_width="wrap_content"
+        android:layout_height="111dp" />
 
     <TextView
         android:id="@+id/grid_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:gravity="center">
-    </TextView>
-
-</LinearLayout>
+        android:gravity="center"
+        android:textAllCaps="true"
+        android:textSize="15sp"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"/>
+</RelativeLayout>

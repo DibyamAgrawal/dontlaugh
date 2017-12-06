@@ -2,6 +2,7 @@ package cse2017.in.ac.nitrkl.dontlaugh;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import pl.droidsonroids.gif.GifImageView;
 
 import static java.security.AccessController.getContext;
 
@@ -20,11 +24,15 @@ import static java.security.AccessController.getContext;
 public class CustomGrid extends BaseAdapter{
     private Context mContext;
     private final String[] web;
-    private final int[] Imageid;
+    private final int[] backColor;
+    private final int[] textColor;
+    private final int[] gifId;
 
-    public CustomGrid(Context c,String[] web,int[] Imageid ) {
+    public CustomGrid(Context c,String[] web,int[] backColor,int[] textColor ,int[] gifId ) {
         mContext = c;
-        this.Imageid = Imageid;
+        this.backColor = backColor;
+        this.textColor = textColor;
+        this.gifId = gifId;
         this.web = web;
     }
     @Override
@@ -54,16 +62,22 @@ public class CustomGrid extends BaseAdapter{
             grid = inflater.inflate(R.layout.gridsingle, null);
             TextView textView = (TextView) grid.findViewById(R.id.grid_text);
 //            ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
-            LinearLayout linearLayout = (LinearLayout)grid.findViewById(R.id.grid_single);
+            RelativeLayout relativeLayout= (RelativeLayout) grid.findViewById(R.id.grid_single);
+            GifImageView gifImageView = (GifImageView) grid.findViewById(R.id.grid_gif);
+
             textView.setText(web[position]);
-            linearLayout.setBackgroundResource(Imageid[position]);
+//            linearLayout.setBackgroundResource(Imageid[position]);
+            relativeLayout.setBackgroundColor(backColor[position]);
+            textView.setTextColor(Color.WHITE);
+            gifImageView.setImageResource(gifId[position]);
 
             DisplayMetrics displayMetrics = new DisplayMetrics();
             ((Activity)mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
             int height = displayMetrics.heightPixels;
             int width = displayMetrics.widthPixels;
 
-            linearLayout.setMinimumHeight((int)(height*.8/3));
+//            relativeLayout.setMinimumHeight((int)(height*.9/3));
+//            gifImageView.setMaxHeight((int)(height*.9/3));
         } else {
             grid = (View) convertView;
         }
